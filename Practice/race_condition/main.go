@@ -1,5 +1,7 @@
 package main
 
+//Use below flag to detect race condition
+//go run -race main.go
 import (
 	"fmt"
 	"sync"
@@ -11,8 +13,8 @@ type counter struct {
 }
 
 func (c *counter) increment() {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	// c.mu.Lock()
+	// defer c.mu.Unlock()
 	c.count++
 }
 
