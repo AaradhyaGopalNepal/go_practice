@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"studentsapi/internal/api/middlewares"
+	"time"
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -97,10 +98,10 @@ func main() {
 	mux.HandleFunc("/teachers/", teachersHandler)
 	mux.HandleFunc("/students/", studentsHandler)
 	mux.HandleFunc("/execs/", execsHandler)
-
+	rl := middlewares.NewRateLimiter(5, time.Minute)
 	server := &http.Server{
 		Addr:    ":3000",
-		Handler: middlewares.SecurityHeaders(mux),
+		Handler: rl.Middleware(middlewares.CompressionMiddleware(middlewares.ResponseTimeMiddleware(middlewares.SecurityHeaders(middlewares.Cors(mux))))),
 	}
 	fmt.Println("Server is running")
 	err := server.ListenAndServe()
