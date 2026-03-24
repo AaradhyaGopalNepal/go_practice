@@ -13,12 +13,15 @@ import (
 func main() {
 	//http vs https
 	http.HandleFunc("/orders", func(w http.ResponseWriter, r *http.Request) {
+		logRequestDetails(r)
 		fmt.Fprintf(w, "Handling incoming orders")
 	})
 	http.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
+		logRequestDetails(r)
+
 		fmt.Fprintf(w, "Handling incoming users")
 	})
-	port := 3000
+	port := 5050
 
 	cert := "cert.pem"
 	key := "key.pem"
@@ -40,5 +43,33 @@ func main() {
 	//HTTP 1
 	// fmt.Println("Server is running on port:", port)
 	// err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+
+}
+
+func logRequestDetails(r *http.Request) {
+	httpVersion := r.Proto
+	fmt.Println("Received request with HTTP version:", httpVersion)
+
+	if r.TLS != nil {
+		tlsVersion := getTLSVersionName(r.TLS.Version)
+		fmt.Println("Version:", tlsVersion)
+	} else {
+		fmt.Println("Without TLS")
+	}
+}
+
+func getTLSVersionName(version uint16) string {
+	switch version {
+	case tls.VersionTLS10:
+		return "v10"
+	case tls.VersionTLS11:
+		return "v11"
+	case tls.VersionTLS12:
+		return "v12"
+	case tls.VersionTLS13:
+		return "v13"
+	default:
+		return "Not found"
+	}
 
 }
