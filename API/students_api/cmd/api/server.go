@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"studentsapi/internal/api/middlewares"
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -99,7 +100,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:    ":3000",
-		Handler: mux,
+		Handler: middlewares.SecurityHeaders(mux),
 	}
 	fmt.Println("Server is running")
 	err := server.ListenAndServe()
