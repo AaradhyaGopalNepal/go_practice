@@ -27,6 +27,7 @@ func Cors(next http.Handler) http.Handler {
 		if r.Method == http.MethodOptions {
 			return
 		}
+		next.ServeHTTP(w, r)
 	})
 }
 
