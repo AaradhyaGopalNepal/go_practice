@@ -2,8 +2,11 @@ syntax = "proto3";
 
 package main;
 
-option go_package = "proto_buffer/mainpb";
+option go_package = "/proto;mainwithservicepb";
 
+service Greater{
+    rpc SayHello (HelloRequest) returns (HelloRequest);
+}
 message HelloRequest{
     string name = 1;
     int32 age = 2;
