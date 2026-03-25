@@ -2,9 +2,11 @@ syntax = "proto3";
 
 package main;
 
+option go_package = "proto_buffer/mainpb";
+
 message HelloRequest{
     string name = 1;
-    int32 age =1;
+    int32 age = 2;
 }
 
 message HelloResponse{
@@ -12,6 +14,6 @@ message HelloResponse{
 }
 
 message UserProfile{
-    string username=1;
-    string email=2;
+    string username = 1;
+    string email = 2;
 }
