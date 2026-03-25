@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package main;
+
+message HelloRequest{
+    string name = 1;
+    int32 age =1;
+}
+
+message HelloResponse{
+    string conf_message = 1;
+}
+
+message UserProfile{
+    string username=1;
+    string email=2;
+}
