@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 
@@ -21,6 +22,12 @@ func (s *server) Add(ctx context.Context, req *pb.AddRequest) (*pb.AddResponse, 
 	}, nil
 }
 
+func (s *server) Greet(ctx context.Context, req *pb.HelloRequets) (*pb.HelloResponse, error) {
+	return &pb.HelloResponse{
+		Name: fmt.Sprint("Hello", req.Name),
+	}, nil
+}
+
 func main() {
 	port := ":50051"
 	lis, err := net.Listen("tcp", port)
@@ -29,6 +36,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 	pb.RegisterCalculateServer(grpcServer, &server{})
+	pb.RegisterGreeterServer(grpcServer, &server{})
 
 	log.Println("Server is running on port", port)
 	err = grpcServer.Serve(lis)
