@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	mainpb "gRPC_strems/proto/gen"
 	"io"
 	"log"
 	"net"
-	"time"
+	"os"
+	"strings"
 
 	"google.golang.org/grpc"
 )
@@ -25,7 +28,7 @@ func (s *server) GenerateFibonacci(req *mainpb.FibonacciRequest, stream mainpb.C
 			return err
 		}
 		a, b = b, a+b
-		time.Sleep(time.Second)
+
 	}
 	return nil
 }
@@ -36,7 +39,7 @@ func (s *server) SendNumbers(stream mainpb.Calculator_SendNumbersServer) error {
 		req, err := stream.Recv()
 		if err == io.EOF {
 			return stream.SendAndClose(&mainpb.NumberResponse{
-				Number: req.Number,
+				Number: 0,
 				Sum:    sum,
 			})
 		}
@@ -47,6 +50,36 @@ func (s *server) SendNumbers(stream mainpb.Calculator_SendNumbersServer) error {
 		sum += req.GetNumber()
 	}
 
+}
+
+func (s *server) Chat(stream mainpb.Calculator_ChatServer) error {
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalln(err)
+			return err
+		}
+		log.Println("Received Message:", req.GetMessage())
+		fmt.Println("Enter response:")
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatalln(err)
+			return err
+		}
+		input = strings.TrimSpace(input)
+		err = stream.Send(&mainpb.ChatMessage{
+			Message: input,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	fmt.Println("Returning Control")
+	return nil
 }
 
 func main() {

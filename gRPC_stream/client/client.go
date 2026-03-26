@@ -33,7 +33,7 @@ func main() {
 		resp, err := stream.Recv()
 		if err == io.EOF {
 			log.Println("End of stream")
-			return
+			break
 		}
 		if err != nil {
 			log.Fatalln("Error receiving GenerateFibonacci stream:", err)
@@ -42,5 +42,24 @@ func main() {
 		log.Println("Fibonacci Number:", resp.GetNumber())
 
 	}
+
+	stream1, err := client.SendNumbers(ctx)
+	if err != nil {
+		log.Fatalln("Error sending to SendNumbers func:", err)
+		return
+	}
+	for num := range 9 {
+		err := stream1.Send(&mainpb.NumberRequest{Number: int32(num)})
+		if err != nil {
+			log.Fatalln("Error sending number:", err)
+		}
+
+	}
+	resp, err := stream1.CloseAndRecv()
+	if err != nil {
+		log.Fatalln("Error receiving final response:", err)
+		return
+	}
+	log.Println("Sum:", resp.Sum)
 
 }
