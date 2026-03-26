@@ -7,6 +7,7 @@ import (
 	"net"
 
 	pb "gRPC/proto/gen"
+	fb "gRPC/proto/gen/farewell"
 
 	"google.golang.org/grpc"
 )
@@ -14,6 +15,7 @@ import (
 type server struct {
 	pb.UnimplementedCalculateServer
 	pb.UnimplementedGreeterServer
+	fb.UnimplementedAufWiedersehenServer
 }
 
 func (s *server) Add(ctx context.Context, req *pb.AddRequest) (*pb.AddResponse, error) {
@@ -28,6 +30,12 @@ func (s *server) Greet(ctx context.Context, req *pb.HelloRequets) (*pb.HelloResp
 	}, nil
 }
 
+func (s *server) AufWiedersehen(ctx context.Context, req *fb.GoodByeRequest) (*fb.GoodByeResponse, error) {
+	return &fb.GoodByeResponse{
+		Message: fmt.Sprint("Hello", req.Name),
+	}, nil
+}
+
 func main() {
 	port := ":50051"
 	lis, err := net.Listen("tcp", port)
@@ -37,7 +45,7 @@ func main() {
 	grpcServer := grpc.NewServer()
 	pb.RegisterCalculateServer(grpcServer, &server{})
 	pb.RegisterGreeterServer(grpcServer, &server{})
-
+	fb.RegisterAufWiedersehenServer(grpcServer, &server{})
 	log.Println("Server is running on port", port)
 	err = grpcServer.Serve(lis)
 	if err != nil {
