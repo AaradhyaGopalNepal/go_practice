@@ -1,4 +1,4 @@
-package grpcsteam
+package main
 
 import (
 	mainpb "gRPC_strems/proto/gen"
