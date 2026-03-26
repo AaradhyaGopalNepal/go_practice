@@ -32,7 +32,7 @@ func (s *server) Greet(ctx context.Context, req *pb.HelloRequets) (*pb.HelloResp
 
 func (s *server) AufWiedersehen(ctx context.Context, req *fb.GoodByeRequest) (*fb.GoodByeResponse, error) {
 	return &fb.GoodByeResponse{
-		Message: fmt.Sprint("Hello", req.Name),
+		Message: fmt.Sprint("Bye Bye", req.Name),
 	}, nil
 }
 
