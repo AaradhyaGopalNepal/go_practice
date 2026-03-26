@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package calculator;
+
+option go_package="/proto/gen;mainpipb";
+
+
+
+message HelloRequets{
+    string name=1;
+}
+
+message HelloResponse{
+    string name=1;
+}
