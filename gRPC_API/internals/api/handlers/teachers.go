@@ -48,7 +48,7 @@ func (s *Server) AddTeachers(ctx context.Context, req *pb.Teachers) (*pb.Teacher
 		}
 		pbTeacher := &pb.Teacher{}
 		modelVal := reflect.ValueOf(*teacher)
-		pbVal := reflect.ValueOf(pbTeacher)
+		pbVal := reflect.ValueOf(pbTeacher).Elem()
 		for i := 0; i < modelVal.NumField(); i++ {
 			modelField := modelVal.Field(i)
 			modelFieldType := modelVal.Type().Field(i)
