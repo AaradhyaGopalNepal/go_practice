@@ -2,8 +2,7 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"gRPC_API/pkg/utils"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,13 +12,11 @@ func CreateMongoClient(ctx context.Context) (*mongo.Client, error) {
 	//"username:password@mongodb://localhost:27017"
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
-		log.Println("Error connecting to MongoDB", err)
-		return nil, err
+		return nil, utils.ErrorHandler(err, "Unable to connect to database")
 	}
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		fmt.Println(err)
-		return nil, err
+		return nil, utils.ErrorHandler(err, "Unable to ping")
 
 	}
 	return client, nil
