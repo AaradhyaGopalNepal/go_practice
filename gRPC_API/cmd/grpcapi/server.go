@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"gRPC_API/internals/api/handlers"
 	pb "gRPC_API/proto/gen"
@@ -8,12 +9,16 @@ import (
 	"net"
 	"os"
 
+	mongodb "gRPC_API/internals/repositories/mongodb"
+
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	context := context.Background()
+	mongodb.CreateMongoClient(context)
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
